@@ -1,0 +1,46 @@
+(*****************)
+(*                 Scilla version                  *)
+(*****************)
+ 
+scilla_version 0
+ 
+(*****************)
+(*               Associated library                *)
+(*****************)
+ 
+library Chatter
+let zero = Uint128 0
+let zero_address = 0x0000000000000000000000000000000000000000
+ 
+(* Library code block follows *)
+ 
+ 
+ 
+(*****************)
+(*             Contract definition                 *)
+(*****************)
+ 
+contract Chatter
+ 
+(* Immutable fields declaration *)
+ 
+(contract_owner: ByStr20)
+ 
+(* Mutable fields declaration *)
+ 
+field recent_chat_msg : String = ""
+field recent_chat_sender : String = ""
+ 
+(* Transitions *)
+ 
+ 
+(* Transition signature *)
+transition firstTransition (param_1 : type_1, param_2 : type_2)
+  (* Transition body *)
+ 
+end
+ 
+transition secondTransition (param_1: type_1)
+  (* Transition body *)
+ 
+end
