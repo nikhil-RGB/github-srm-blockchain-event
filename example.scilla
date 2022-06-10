@@ -1,46 +1,71 @@
 (*****************)
 (*                 Scilla version                  *)
 (*****************)
- 
+
 scilla_version 0
- 
+
 (*****************)
 (*               Associated library                *)
 (*****************)
- 
 library Chatter
+
 let zero = Uint128 0
 let zero_address = 0x0000000000000000000000000000000000000000
- 
-(* Library code block follows *)
- 
- 
- 
+let one_msg = 
+  fun (msg: Message) => 
+    let nil_msg = Nil {Message} in
+    Cons {Message} msg nil_msg
 (*****************)
-(*             Contract definition                 *)
+(*             The contract definition             *)
 (*****************)
- 
+
 contract Chatter
- 
-(* Immutable fields declaration *)
- 
 (contract_owner: ByStr20)
- 
-(* Mutable fields declaration *)
- 
+
+field initial_contract_owner : ByStr20 = contract_owner 
 field recent_chat_msg : String = ""
-field recent_chat_sender : String = ""
- 
-(* Transitions *)
- 
- 
-(* Transition signature *)
-transition firstTransition (param_1 : type_1, param_2 : type_2)
-  (* Transition body *)
- 
+field recent_chat_sender: ByStr20 =  zero_address
+
+
+procedure isOwner()
+    curr_owner <- initial_contract_owner;
+    is_owner = builtin eq curr_owner _sender;
+    match is_owner with
+        | True =>
+        | False =>
+        e = {
+            _exception: "NotOwnerError"
+        };
+         throw e
+     end
 end
- 
-transition secondTransition (param_1: type_1)
-  (* Transition body *)
- 
+
+
+transition sendMsg (msg : String, sendTo: ByStr20)
+  isOwner;
+  message = {
+      _tag: "recvMsg";
+      _recipient: sendTo;
+      _amount: zero;
+      message: msg
+  };
+  msg_to_sender = one_msg message;
+  send msg_to_sender;
+  e = {
+      _eventname: "sendMsg";
+      sendTo: sendTo;
+      message: msg
+  };
+  event e
+end
+
+transition recvMsg (message: String)
+  recent_chat_msg := message;
+  recent_chat_sender := _sender;
+  e = {
+      _eventname: "recMsg";
+      sender: _sender;
+      message: message
+  };
+  event e
 end
